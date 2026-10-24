@@ -260,6 +260,7 @@
         .btn-cancel  { background: #3a4a5e; color: #ccc; }
 
         /* ── BOTONES PARTICIPA ── */
+        .voto-hint { margin-top: 8px; font-size: 0.8rem; color: #9aa0b8; text-align: center; }
         .voto-btns { display: flex; gap: 10px; }
         .voto-btn {
             flex: 1;
@@ -301,13 +302,13 @@
             <div class="field-label">¿Participa en Halloween?</div>
             <input type="hidden" id="voto-select" value="NC">
             <div class="voto-btns">
-                <button type="button" id="btn-si" class="voto-btn" onclick="setVoto('SI')">🎃 Sí participo</button>
-                <button type="button" id="btn-no" class="voto-btn sel" onclick="setVoto('NC')">No participo</button>
+                <button type="button" id="btn-si" class="voto-btn" onclick="elegirVoto('SI')">🎃 Sí participo</button>
+                <button type="button" id="btn-no" class="voto-btn sel" onclick="elegirVoto('NC')">No participo</button>
             </div>
+            <div class="voto-hint">Al tocar una opción se guarda.</div>
 
             <div class="btns-bottom">
-                <button class="btn-guardar" onclick="guardar()">💾 Guardar</button>
-                <button class="btn-cancel"  onclick="cerrarModal()">✕ Cancelar</button>
+                <button class="btn-cancel"  onclick="cerrarModal()">✕ Cerrar</button>
             </div>
         </div>
     </div>
@@ -565,6 +566,14 @@
             document.getElementById('voto-select').value = v;
             document.getElementById('btn-si').classList.toggle('sel', v === 'SI');
             document.getElementById('btn-no').classList.toggle('sel', v !== 'SI');
+        }
+
+        let _guardando = false;
+        async function elegirVoto(v) {
+            if (_guardando) return;
+            _guardando = true;
+            setVoto(v);
+            try { await guardar(); } finally { _guardando = false; }
         }
 
         async function guardar() {
