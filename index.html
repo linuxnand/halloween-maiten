@@ -277,9 +277,6 @@
 
     <div class="modal" id="modal">
         <div class="modal-content">
-            <div class="field-label">Nombre</div>
-            <input type="text" id="nombre" placeholder="Nombre y Apellido">
-
             <div class="field-label">Dirección</div>
             <input type="text" id="direccion" placeholder="Calle y número">
 
@@ -437,7 +434,6 @@
                     const v = data ? (data.voto || '').toUpperCase() : '';
                     const estado = v === 'SI' ? '🎃 Participa en Halloween' : v === 'NO' ? '⚪ No participa' : '⚪ No participa / sin respuesta';
                     tip.innerHTML =
-                        'Nombre: <b>' + (data && data.nombre || '—') + '</b><br>' +
                         'Dirección: <b>' + (data && data.direccion || '—') + '</b><br>' +
                         estado;
                     tip.style.display = 'block';
@@ -481,7 +477,6 @@
                                      : v === 'NO' ? '⚪ No participa'
                                      : '⚪ No participa / sin respuesta';
                         tip.innerHTML =
-                            'Nombre: <b>' + (d && d.nombre   || '—') + '</b><br>' +
                             'Dirección: <b>' + (d && d.direccion || '—') + '</b><br>' +
                             estado +
                             '<button class="tip-edit-btn" data-lote="' + p.id + '" onclick="abrirModal(this.dataset.lote)">Editar</button>';
@@ -505,13 +500,11 @@
                         // ── PC: abrir modal directo ──
                         highlightPath(p);
                         seleccionado = p.id;
-                        document.getElementById('nombre').value    = '';
                         document.getElementById('direccion').value = '';
                         document.getElementById('voto-select').value = 'NC';
                         const { data } = await _supabase
                             .from('halloween').select('*').eq('lote_id', p.id).maybeSingle();
                         if (data) {
-                            if (data.nombre)    document.getElementById('nombre').value    = data.nombre;
                             if (data.direccion) document.getElementById('direccion').value = data.direccion;
                             const v = (data.voto || '').toUpperCase();
                             document.getElementById('voto-select').value =
@@ -532,12 +525,10 @@
             seleccionado = loteId;
             const p = document.getElementById(loteId);
             if (p) highlightPath(p);
-            document.getElementById('nombre').value    = '';
             document.getElementById('direccion').value = '';
             document.getElementById('voto-select').value = 'NC';
             const d = window._votosData && window._votosData[loteId];
             if (d) {
-                if (d.nombre)    document.getElementById('nombre').value    = d.nombre;
                 if (d.direccion) document.getElementById('direccion').value = d.direccion;
                 const v = (d.voto || '').toUpperCase();
                 document.getElementById('voto-select').value = (v === 'SI' || v === 'NO') ? v : 'NC';
@@ -554,12 +545,11 @@
         }
 
                 async function guardar() {
-            const nombre    = document.getElementById('nombre').value.trim();
             const direccion = document.getElementById('direccion').value.trim();
             const valor     = document.getElementById('voto-select').value;
 
             const { error } = await _supabase.from('halloween').upsert(
-                { lote_id: seleccionado, nombre, direccion, voto: valor },
+                { lote_id: seleccionado, direccion, voto: valor },
                 { onConflict: 'lote_id' }
             );
             if (error) { alert('Error al guardar: ' + error.message); return; }
@@ -589,7 +579,7 @@
             const banner = document.getElementById('lote-banner');
             banner.innerHTML =
                 '📍 Lote: <b>' + loteId + '</b>' +
-                (data && data.nombre ? ' — ' + data.nombre : '') +
+                (data && data.direccion ? ' — ' + data.direccion : '') +
                 '&nbsp;&nbsp;<span style="font-weight:400;font-size:0.8rem">✕ cerrar</span>';
             banner.style.display = 'block';
 
