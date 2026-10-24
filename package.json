@@ -1,0 +1,8 @@
+{
+  "name": "halloween-maiten",
+  "version": "1.0.0",
+  "description": "Mapa interactivo Halloween barrio El Maitén",
+  "scripts": {
+    "start": "serve ."
+  }
+}
