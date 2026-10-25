@@ -376,6 +376,9 @@
             .catch(err => { document.getElementById('stats').innerText = '❌ ' + err.message; });
 
         // ── LOAD VOTES ────────────────────────────────────────────────
+        // Tamaño de la calabaza 🎃 (0.56 = 20% más chica que el 0.7 anterior). Subir = más grande, bajar = más chica.
+        const TAMANO_CALABAZA = 0.56;
+
         async function cargarVotos() {
             const { data, error } = await _supabase.from('halloween').select('*');
             if (error) { console.error(error); return; }
@@ -413,7 +416,7 @@
                         pk.setAttribute('y', b.y + b.height / 2);
                         pk.setAttribute('text-anchor', 'middle');
                         pk.setAttribute('dominant-baseline', 'central');
-                        pk.setAttribute('font-size', Math.min(b.width, b.height) * 0.7);
+                        pk.setAttribute('font-size', Math.min(b.width, b.height) * TAMANO_CALABAZA);
                         pk.style.pointerEvents = 'none';
                         pk.style.userSelect = 'none';
                         pk.textContent = '🎃';
