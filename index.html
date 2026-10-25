@@ -400,6 +400,28 @@
                 p.style.opacity = '1';         // override any inherited group opacity
                 p.removeAttribute('opacity');  // remove SVG presentation opacity if any
                 if (!colorMap.has(p.id)) nc++;
+
+                // 🎃 calabaza en el centro del lote que participa
+                const pkId = 'pk-' + p.id;
+                let pk = document.getElementById(pkId);
+                if (colorMap.get(p.id) === '#2ecc71') {
+                    if (!pk) {
+                        const b = p.getBBox();
+                        pk = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        pk.setAttribute('id', pkId);
+                        pk.setAttribute('x', b.x + b.width / 2);
+                        pk.setAttribute('y', b.y + b.height / 2);
+                        pk.setAttribute('text-anchor', 'middle');
+                        pk.setAttribute('dominant-baseline', 'central');
+                        pk.setAttribute('font-size', Math.min(b.width, b.height) * 0.7);
+                        pk.style.pointerEvents = 'none';
+                        pk.style.userSelect = 'none';
+                        pk.textContent = '🎃';
+                        p.parentNode.appendChild(pk);
+                    }
+                } else if (pk) {
+                    pk.remove();
+                }
             });
 
             const total = si + no;
